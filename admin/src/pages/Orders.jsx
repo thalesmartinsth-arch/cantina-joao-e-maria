@@ -36,7 +36,7 @@ const Orders = () => {
                 .limit(50);
 
             if (error) throw error;
-            setOrders(data);
+            setOrders(data || []);
         } catch (error) {
             console.error('Erro ao buscar pedidos:', error);
         } finally {
@@ -150,11 +150,11 @@ const Orders = () => {
                                         {Array.isArray(order.items) && order.items.map((item, idx) => (
                                             <div key={idx} className="item-row">
                                                 <span>
-                                                    <span className="item-quantity">{item.quantity}x</span>
-                                                    {item.name}
-                                                    {item.selectedOption && <span style={{ fontSize: '0.8em', color: '#666' }}> ({item.selectedOption})</span>}
+                                                    <span className="item-quantity">{item?.quantity || 1}x</span>
+                                                    {' '}{item?.name || 'Item'}
+                                                    {item?.selectedOption && <span style={{ fontSize: '0.8em', color: '#666' }}> ({item.selectedOption})</span>}
                                                 </span>
-                                                <span>{formatCurrency(item.price * item.quantity)}</span>
+                                                <span>{formatCurrency((item?.price || 0) * (item?.quantity || 1))}</span>
                                             </div>
                                         ))}
                                     </div>
