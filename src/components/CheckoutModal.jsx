@@ -85,7 +85,7 @@ ${itemsList}
 
         } catch (error) {
             console.error('Erro ao salvar pedido:', error);
-            alert('Erro ao processar pedido. Tente novamente.');
+            alert(`Erro ao processar pedido: ${error.message || JSON.stringify(error)}`);
         }
     };
 
