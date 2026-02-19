@@ -91,9 +91,9 @@ const CheckoutModal = () => {
         try {
             setLoading(true);
             // 1. Salvar no Supabase
-            // Status 'paid' means payment confirmed, but order is NOT finished (approved).
-            // Admin will change 'paid' -> 'approved' (Done).
-            const orderStatus = 'paid';
+            // Status 'pending' keeps it in Active Orders.
+            // Since payment_id is present, we know it's paid.
+            const orderStatus = 'pending';
 
             const { data: orderData, error: orderError } = await supabase
                 .from('orders')
@@ -134,7 +134,7 @@ const CheckoutModal = () => {
 
         } catch (error) {
             console.error('Erro ao finalizar:', error);
-            alert('Erro ao finalizar pedido.');
+            alert(`Erro ao finalizar pedido: ${error.message || JSON.stringify(error)}`);
         } finally {
             setLoading(false);
         }
