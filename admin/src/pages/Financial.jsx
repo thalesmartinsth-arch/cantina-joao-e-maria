@@ -112,8 +112,7 @@ const Financial = () => {
                 {loading ? (
                     <p>Carregando métricas...</p>
                 ) : (
-                    <>
-
+                    <div className="dashboard-content">
                         <div className="dashboard-grid">
                             <div className="stat-card today">
                                 <span className="stat-label">Faturamento Hoje</span>
@@ -168,17 +167,18 @@ const Financial = () => {
 
                                 <div className="payment-method-stats">
                                     <div className="payment-stat">
-                                        <h4><div style={{ display: 'inline-block', width: '10px', height: '10px', borderRadius: '50%', background: '#3b82f6', marginRight: '5px' }}></div>PIX</h4>
+                                        <h4><span style={{ display: 'inline-block', width: '10px', height: '10px', borderRadius: '50%', background: '#3b82f6', marginRight: '5px' }}></span>PIX</h4>
                                         <p>R$ {stats.pixTotal.toFixed(2)}</p>
                                     </div>
                                     <div className="payment-stat">
-                                        <h4><div style={{ display: 'inline-block', width: '10px', height: '10px', borderRadius: '50%', background: '#10b981', marginRight: '5px' }}></div>Dinheiro</h4>
+                                        <h4><span style={{ display: 'inline-block', width: '10px', height: '10px', borderRadius: '50%', background: '#10b981', marginRight: '5px' }}></span>Dinheiro</h4>
                                         <p>R$ {stats.moneyTotal.toFixed(2)}</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </>
+                    </div>
+
                 )}
             </main>
         </div>
