@@ -76,7 +76,7 @@ const Home = () => {
             </main>
 
             <footer className="footer container">
-                <p>&copy; 2026 Lanchonete Innovation. Todos os direitos reservados.</p>
+                <p>&copy; 2026 Lanchonete Innovation. Todos os direitos reservados. <br /><small>v1.1 (PIX Fix)</small></p>
             </footer>
         </>
     );
