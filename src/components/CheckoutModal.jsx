@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
+import { supabase } from '../supabaseClient';
 import '../styles/CheckoutModal.css';
 
 const CheckoutModal = () => {
@@ -24,21 +25,45 @@ const CheckoutModal = () => {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const finalizeOrder = (e) => {
+    const finalizeOrder = async (e) => {
         e.preventDefault();
 
-        // Construct WhatsApp message
-        let itemsList = cartItems.map(item => {
-            let itemText = `▫️ ${item.quantity}x ${item.name} (${item.selectedOption || 'Padrão'})`;
-            return itemText;
-        }).join('\n');
+        try {
+            // 1. Salvar no Supabase
+            const { data: orderData, error: orderError } = await supabase
+                .from('orders')
+                .insert([{
+                    customer_name: formData.guardianName,
+                    customer_phone: formData.phone,
+                    items: cartItems,
+                    total_amount: cartTotal,
+                    payment_method: formData.paymentMethod,
+                    status: 'pending',
+                    delivery_info: {
+                        student: formData.studentName,
+                        class: formData.className
+                    }
+                }])
+                .select()
+                .single();
 
-        const paymentDescription = formData.paymentMethod === 'pix'
-            ? 'PIX (Chave enviada na conversa)'
-            : 'Dinheiro (Pagar na entrega)';
+            if (orderError) throw orderError;
 
-        const message = `👋 *Novo Pedido - Cantina João e Maria* 🍔
-        
+            const orderId = orderData.id.split('-')[0].toUpperCase();
+
+            // 2. Montar Mensagem WhatsApp
+            let itemsList = cartItems.map(item => {
+                let itemText = `▫️ ${item.quantity}x ${item.name} (${item.selectedOption || 'Padrão'})`;
+                return itemText;
+            }).join('\n');
+
+            const paymentDescription = formData.paymentMethod === 'pix'
+                ? 'PIX (Chave enviada na conversa)'
+                : 'Dinheiro (Pagar na entrega)';
+
+            const message = `👋 *Novo Pedido - Cantina João e Maria* 🍔
+            
+🆔 *Pedido #:* ${orderId}
 👤 *Responsável:* ${formData.guardianName}
 🎓 *Aluno:* ${formData.studentName}
 🏫 *Turma:* ${formData.className}
@@ -49,14 +74,19 @@ ${itemsList}
 
 💲 *Total:* R$ ${cartTotal.toFixed(2)}`;
 
-        const phoneNumber = "55" + formData.phone.replace(/\D/g, ''); // Ensure 55 code
-        const encodedMessage = encodeURIComponent(message);
+            const phoneNumber = "55" + formData.phone.replace(/\D/g, '');
+            const encodedMessage = encodeURIComponent(message);
 
-        // Open WhatsApp
-        window.open(`https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`, '_blank');
+            // 3. Abrir WhatsApp
+            window.open(`https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`, '_blank');
 
-        clearCart();
-        closeCheckout();
+            clearCart();
+            closeCheckout();
+
+        } catch (error) {
+            console.error('Erro ao salvar pedido:', error);
+            alert('Erro ao processar pedido. Tente novamente.');
+        }
     };
 
     return (
