@@ -19,9 +19,6 @@ const Orders = () => {
 
     useEffect(() => {
         fetchOrders();
-        // Polling para atualização automática a cada 30 segundos
-        const interval = setInterval(fetchOrders, 30000);
-        return () => clearInterval(interval);
     }, []);
 
     const fetchOrders = async () => {
@@ -36,9 +33,14 @@ const Orders = () => {
                 .limit(50);
 
             if (error) throw error;
-            setOrders(data || []);
+
+            // Ensure data is array before setting state
+            const safeData = data || [];
+            setOrders(safeData);
         } catch (error) {
             console.error('Erro ao buscar pedidos:', error);
+            // On error, set empty to ensure no crash
+            setOrders([]);
         } finally {
             setLoading(false);
         }
@@ -108,7 +110,7 @@ const Orders = () => {
             <main className="orders-main">
                 <div className="orders-header">
                     <h2>Pedidos Ativos</h2>
-                    <button className="refresh-btn" onClick={fetchOrders}>
+                    <button className="refresh-btn" onClick={() => fetchOrders()}>
                         <RefreshCw size={18} /> Atualizar
                     </button>
                 </div>
