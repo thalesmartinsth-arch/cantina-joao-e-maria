@@ -32,7 +32,7 @@ const OptionsModal = ({ product, onClose, onConfirm }) => {
                 </p>
 
                 <div className="days-selection">
-                    {product.weeklyMenu.map((option) => (
+                    {product.weekly_menu.map((option) => (
                         <div
                             key={option.day}
                             className={`modal-option ${selectedDays.includes(option.day) ? 'selected' : ''}`}

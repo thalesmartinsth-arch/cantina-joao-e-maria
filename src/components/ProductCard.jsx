@@ -11,9 +11,9 @@ const ProductCard = ({ product }) => {
     const [selectedOption, setSelectedOption] = useState('');
 
     const handleAddToCart = () => {
-        if (product.weeklyMenu) {
+        if (product.weekly_menu) {
             setShowOptions(true);
-        } else if (product.partyKit) {
+        } else if (product.party_kit) {
             setShowPartyOptions(true);
         } else if (product.options && product.options.length > 0) {
             if (!selectedOption) {

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import '../styles/Modals.css';
 
 const PartyOptionsModal = ({ product, onClose, onConfirm }) => {
-    const { totalSnacks, snackOptions } = product.partyKit;
+    const { totalSnacks, snackOptions } = product.party_kit;
 
     const [selections, setSelections] = useState(
         snackOptions.reduce((acc, option) => ({ ...acc, [option]: 0 }), {})
