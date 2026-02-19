@@ -76,7 +76,9 @@ const Home = () => {
             </main>
 
             <footer className="footer container">
-                <p>&copy; 2026 Lanchonete Innovation. Todos os direitos reservados. <br /><small>v1.1 (PIX Fix)</small></p>
+                <p>&copy; 2026 Lanchonete Innovation. Todos os direitos reservados. <br />
+                    <small>v1.2 (Debug Key: {import.meta.env.VITE_SUPABASE_ANON_KEY?.substring(0, 10)}...)</small>
+                </p>
             </footer>
         </>
     );
