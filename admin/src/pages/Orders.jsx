@@ -86,6 +86,11 @@ const Orders = () => {
         return date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) + ' - ' + date.toLocaleDateString('pt-BR');
     };
 
+    const formatCurrency = (value) => {
+        const num = parseFloat(value);
+        return isNaN(num) ? 'R$ 0,00' : 'R$ ' + num.toFixed(2);
+    };
+
     return (
         <div className="orders-container">
             <Header />
@@ -149,7 +154,7 @@ const Orders = () => {
                                                     {item.name}
                                                     {item.selectedOption && <span style={{ fontSize: '0.8em', color: '#666' }}> ({item.selectedOption})</span>}
                                                 </span>
-                                                <span>R$ {(item.price * item.quantity).toFixed(2)}</span>
+                                                <span>{formatCurrency(item.price * item.quantity)}</span>
                                             </div>
                                         ))}
                                     </div>
@@ -158,7 +163,7 @@ const Orders = () => {
                                         <span className={`payment-method ${order.payment_method}`}>
                                             {order.payment_method === 'pix' ? '💠 PIX' : '💵 Dinheiro'}
                                         </span>
-                                        <span className="total-amount">R$ {order.total_amount?.toFixed(2)}</span>
+                                        <span className="total-amount">{formatCurrency(order.total_amount)}</span>
                                     </div>
 
                                     {(order.status === 'pending' || order.status === 'paid') && (
