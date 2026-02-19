@@ -10,8 +10,9 @@ export const ThemeProvider = ({ children }) => {
     const theme = 'light';
 
     useEffect(() => {
-        document.documentElement.setAttribute('data-theme', 'light');
-        localStorage.setItem('theme', 'light');
+        // Force Light Mode using the existing CSS class structure
+        document.body.className = 'high-contrast';
+        localStorage.setItem('theme', 'high-contrast');
     }, []);
 
     const toggleTheme = () => {
