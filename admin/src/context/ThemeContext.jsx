@@ -6,20 +6,16 @@ export const useTheme = () => useContext(ThemeContext);
 
 export const ThemeProvider = ({ children }) => {
     // Check localStorage or default to 'default'
-    const [theme, setTheme] = useState(() => {
-        const savedTheme = localStorage.getItem('theme');
-        return savedTheme || 'default';
-    });
+    // Force Light Mode for Admin
+    const theme = 'light';
 
     useEffect(() => {
-        // Apply theme class to body
-        document.body.className = theme;
-        // Save to localStorage
-        localStorage.setItem('theme', theme);
-    }, [theme]);
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+    }, []);
 
     const toggleTheme = () => {
-        setTheme(prevTheme => prevTheme === 'default' ? 'high-contrast' : 'default');
+        // No-op: Theme is forced to light
     };
 
     return (

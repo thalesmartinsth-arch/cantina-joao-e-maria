@@ -1,200 +1,223 @@
 .orders-container {
     min-height: 100vh;
-    background-color: var(--bg-primary);
+    background-color: #f3f4f6;
+    /* Force light bg */
+    padding-bottom: 2rem;
 }
 
 .orders-main {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 1rem;
 }
 
 .orders-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .orders-header h2 {
-    font-size: 2rem;
-    color: var(--color-text);
+    font-size: 1.5rem;
+    color: #1f2937;
+    margin: 0;
 }
 
 .refresh-btn {
-    background: var(--color-secondary);
-    color: var(--color-text);
+    background: #4b5563;
+    color: white;
     border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: var(--radius-full);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
     font-weight: 600;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: all 0.2s;
+    transition: background 0.2s;
 }
 
 .refresh-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background: #374151;
 }
 
 .orders-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+}
+
+@media (max-width: 600px) {
+    .orders-grid {
+        grid-template-columns: 1fr;
+        /* Stack on mobile */
+    }
+
+    .orders-main {
+        padding: 0.5rem;
+    }
 }
 
 .order-card {
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(10px);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--border-color);
-    padding: 1.5rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    border-left: 5px solid #ccc;
+    gap: 0.75rem;
+    border-left: 4px solid #d1d5db;
+    /* Default border */
 }
 
+/* Status Borders */
 .order-card.status-pending {
     border-left-color: #f59e0b;
-    /* Amber */
 }
 
+.order-card.status-paid {
+    border-left-color: #3b82f6;
+}
+
+/* Should imply paid but not delivered? */
 .order-card.status-approved {
     border-left-color: #10b981;
-    /* Green */
 }
 
-.order-card.status-rejected {
-    border-left-color: #ef4444;
-    /* Red */
-}
-
-.order-header {
+.order-header-row {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 0.75rem;
+    font-size: 0.85rem;
+    color: #6b7280;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 0.5rem;
 }
 
 .order-id {
-    font-size: 0.85rem;
-    color: var(--color-text-muted);
     font-family: monospace;
-}
-
-.order-time {
-    font-size: 0.85rem;
-    color: var(--color-text-muted);
-    font-weight: 500;
+    font-weight: bold;
 }
 
 .customer-info {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
 }
 
-.info-row {
-    display: flex;
-    gap: 0.5rem;
-    font-size: 0.95rem;
+.customer-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1f2937;
 }
 
-.info-label {
+.customer-details {
+    font-size: 0.85rem;
+    color: #4b5563;
+}
+
+.payment-status-badge {
+    text-align: center;
+    padding: 0.4rem;
+    border-radius: 4px;
     font-weight: 600;
-    color: var(--color-text-muted);
-    min-width: 80px;
+    font-size: 0.9rem;
 }
 
-.order-items {
-    background: rgba(0, 0, 0, 0.03);
+.pay-status-paid {
+    background-color: #d1fae5;
+    color: #065f46;
+    border: 1px solid #34d399;
+}
+
+.pay-status-pending {
+    background-color: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fcd34d;
+}
+
+.order-items-list {
+    background: #f9fafb;
     padding: 0.75rem;
-    border-radius: 8px;
+    border-radius: 6px;
+    font-size: 0.9rem;
 }
 
-.item-row {
+.order-item-row {
     display: flex;
     justify-content: space-between;
-    font-size: 0.9rem;
     margin-bottom: 0.25rem;
 }
 
-.item-quantity {
+.item-qty {
     font-weight: 700;
+    color: #374151;
     margin-right: 0.5rem;
 }
 
-.order-footer {
+.order-total-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-top: auto;
-    padding-top: 0.75rem;
-    border-top: 1px solid var(--border-color);
+    padding-top: 0.5rem;
+    border-top: 1px dashed #e5e7eb;
 }
 
-.total-amount {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--color-primary);
-}
-
-.payment-method {
-    font-size: 0.85rem;
-    padding: 0.25rem 0.5rem;
+.method-badge {
+    font-size: 0.8rem;
+    padding: 0.2rem 0.5rem;
     border-radius: 4px;
     background: #e5e7eb;
     color: #374151;
 }
 
-.payment-method.pix {
+.method-badge.pix {
     background: #dbeafe;
     color: #1e40af;
 }
 
-.payment-method.money {
+.method-badge.money {
     background: #d1fae5;
     color: #065f46;
 }
 
-.order-actions {
+.total-value {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #111827;
+}
+
+.order-actions-row {
     display: flex;
     gap: 0.5rem;
-    margin-top: 1rem;
+    margin-top: 0.5rem;
 }
 
 .action-btn {
     flex: 1;
-    padding: 0.5rem;
+    padding: 0.75rem;
     border: none;
     border-radius: 6px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 0.25rem;
+    font-size: 0.9rem;
+    transition: opacity 0.2s;
+}
+
+.action-btn:hover {
+    opacity: 0.9;
 }
 
 .btn-approve {
-    background: #10b981;
+    background: ="#10b981";
+    /* Fallback */
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
     color: white;
 }
 
 .btn-reject {
-    background: #ef4444;
-    color: white;
-}
-
-.empty-state {
-    text-align: center;
-    padding: 4rem;
-    color: var(--color-text-muted);
-    grid-column: 1 / -1;
+    background: white;
+    border: 1px solid #ef4444;
+    color: #ef4444;
 }

@@ -79,6 +79,18 @@ const Orders = () => {
         } catch (e) { return '--:--'; }
     };
 
+    const getPaymentStatus = (order) => {
+        // PIX with payment_id implies paid. Money is pending until delivery.
+        if (order.payment_method === 'pix' && order.payment_id) {
+            return { label: '✅ Pagamento Realizado', className: 'pay-status-paid' };
+        }
+        if (order.payment_method === 'money') {
+            return { label: '⚠️ Pagamento Pendente', className: 'pay-status-pending' };
+        }
+        // Fallback for Pix without ID (shouldn't happen) or other cases
+        return { label: '❓ Verificar Pagamento', className: 'pay-status-unknown' };
+    };
+
     return (
         <div className="orders-container">
             <Header />
@@ -109,46 +121,55 @@ const Orders = () => {
                 )}
 
                 <div className="orders-grid">
-                    {orders.map((order) => (
-                        <div key={order.id || Math.random()} className={`order-card status-${order.status || 'pending'}`}>
-                            <div className="order-header">
-                                <span className="order-id">#{typeof order.id === 'string' ? order.id.split('-')[0].toUpperCase() : order.id}</span>
-                                <span className="order-time">{formatDate(order.created_at)}</span>
-                            </div>
+                    {orders.map((order) => {
+                        const payStatus = getPaymentStatus(order);
 
-                            <div className="customer-info" style={{ margin: '10px 0' }}>
-                                <div><strong>{order.customer_name || 'Cliente'}</strong></div>
-                                <div style={{ fontSize: '0.9em', color: '#666' }}>
-                                    {order.delivery_info?.student} - {order.delivery_info?.class}
+                        return (
+                            <div key={order.id || Math.random()} className={`order-card status-${order.status || 'pending'}`}>
+                                <div className="order-header-row">
+                                    <span className="order-id">#{typeof order.id === 'string' ? order.id.split('-')[0].toUpperCase() : order.id}</span>
+                                    <span className="order-time">{formatDate(order.created_at)}</span>
+                                </div>
+
+                                <div className="customer-info">
+                                    <div className="customer-name">{order.customer_name || 'Cliente'}</div>
+                                    <div className="customer-details">
+                                        {order.delivery_info?.student && <span>Aluno: {order.delivery_info.student}</span>}
+                                        {order.delivery_info?.class && <span> • Turma: {order.delivery_info.class}</span>}
+                                    </div>
+                                </div>
+
+                                <div className={`payment-status-badge ${payStatus.className}`}>
+                                    {payStatus.label}
+                                </div>
+
+                                <div className="order-items-list">
+                                    {Array.isArray(order.items) ? order.items.map((item, idx) => (
+                                        <div key={idx} className="order-item-row">
+                                            <span className="item-qty">{item.quantity}x</span>
+                                            <span className="item-name">{item.name}</span>
+                                        </div>
+                                    )) : <p>Sem itens</p>}
+                                </div>
+
+                                <div className="order-total-row">
+                                    <span className={`method-badge ${order.payment_method}`}>
+                                        {order.payment_method === 'pix' ? '💠 PIX' : '💵 Dinheiro'}
+                                    </span>
+                                    <span className="total-value">{formatCurrency(order.total_amount)}</span>
+                                </div>
+
+                                <div className="order-actions-row">
+                                    <button className="action-btn btn-approve" onClick={() => handleUpdateStatus(order.id, 'approved')}>
+                                        PRONTO
+                                    </button>
+                                    <button className="action-btn btn-reject" onClick={() => handleUpdateStatus(order.id, 'rejected')}>
+                                        CANCELAR
+                                    </button>
                                 </div>
                             </div>
-
-                            <div className="order-items" style={{ background: '#f9f9f9', padding: '10px', borderRadius: '4px', marginBottom: '10px' }}>
-                                {Array.isArray(order.items) ? order.items.map((item, idx) => (
-                                    <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-                                        <span>{item.quantity}x {item.name}</span>
-                                        <span>{formatCurrency((item.price || 0) * (item.quantity || 1))}</span>
-                                    </div>
-                                )) : <p>Sem itens</p>}
-                            </div>
-
-                            <div className="order-footer" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <span className={`payment-method ${order.payment_method}`}>
-                                    {order.payment_method === 'pix' ? 'PIX' : '$$$'}
-                                </span>
-                                <span style={{ fontWeight: 'bold' }}>{formatCurrency(order.total_amount)}</span>
-                            </div>
-
-                            <div className="order-actions" style={{ marginTop: '15px', display: 'flex', gap: '10px' }}>
-                                <button className="action-btn btn-approve" onClick={() => handleUpdateStatus(order.id, 'approved')}>
-                                    &#10003; Pronto
-                                </button>
-                                <button className="action-btn btn-reject" onClick={() => handleUpdateStatus(order.id, 'rejected')}>
-                                    &#10005; Cancelar
-                                </button>
-                            </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             </main>
         </div>
