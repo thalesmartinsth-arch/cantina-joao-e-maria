@@ -61,7 +61,8 @@ const CheckoutModal = () => {
 
         } catch (error) {
             console.error('Error generating PIX:', error);
-            alert('Erro ao gerar PIX. Tente novamente.');
+            const detailedError = error.message || (error.context && error.context.message) || JSON.stringify(error);
+            alert(`Erro ao gerar PIX: ${detailedError}`);
         } finally {
             setLoading(false);
         }
