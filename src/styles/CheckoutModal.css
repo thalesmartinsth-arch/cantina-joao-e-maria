@@ -244,3 +244,12 @@
 .btn-outline:hover {
     border-color: var(--color-text);
 }
+
+.pix-qrcode {
+    max-width: 180px;
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    margin: var(--spacing-sm) 0;
+}
