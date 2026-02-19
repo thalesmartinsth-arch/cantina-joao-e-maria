@@ -113,74 +113,74 @@ const Financial = () => {
                     <p>Carregando métricas...</p>
                 ) : (
                     <>
-                        <>
-                            <div className="dashboard-grid">
-                                <div className="stat-card today">
-                                    <span className="stat-label">Faturamento Hoje</span>
-                                    <span className="stat-value">R$ {stats.todayTotal.toFixed(2)}</span>
-                                    <span className="stat-subtext">
-                                        <TrendingUp size={16} style={{ verticalAlign: 'middle', marginRight: '4px' }} />
-                                        {stats.todayCount} pedidos concluídos
-                                    </span>
-                                </div>
 
-                                <div className="stat-card month">
-                                    <span className="stat-label">Faturamento Mensal</span>
-                                    <span className="stat-value">R$ {stats.monthTotal.toFixed(2)}</span>
-                                    <span className="stat-subtext">
-                                        <Calendar size={16} style={{ verticalAlign: 'middle', marginRight: '4px' }} />
-                                        {stats.monthCount} pedidos este mês
-                                    </span>
-                                </div>
+                        <div className="dashboard-grid">
+                            <div className="stat-card today">
+                                <span className="stat-label">Faturamento Hoje</span>
+                                <span className="stat-value">R$ {stats.todayTotal.toFixed(2)}</span>
+                                <span className="stat-subtext">
+                                    <TrendingUp size={16} style={{ verticalAlign: 'middle', marginRight: '4px' }} />
+                                    {stats.todayCount} pedidos concluídos
+                                </span>
+                            </div>
 
-                                <div className="stat-card total">
-                                    <span className="stat-label">Ticket Médio (Mês)</span>
-                                    <span className="stat-value">
-                                        R$ {stats.monthCount > 0 ? (stats.monthTotal / stats.monthCount).toFixed(2) : '0.00'}
-                                    </span>
-                                    <span className="stat-subtext">
-                                        Média por pedido
-                                    </span>
+                            <div className="stat-card month">
+                                <span className="stat-label">Faturamento Mensal</span>
+                                <span className="stat-value">R$ {stats.monthTotal.toFixed(2)}</span>
+                                <span className="stat-subtext">
+                                    <Calendar size={16} style={{ verticalAlign: 'middle', marginRight: '4px' }} />
+                                    {stats.monthCount} pedidos este mês
+                                </span>
+                            </div>
+
+                            <div className="stat-card total">
+                                <span className="stat-label">Ticket Médio (Mês)</span>
+                                <span className="stat-value">
+                                    R$ {stats.monthCount > 0 ? (stats.monthTotal / stats.monthCount).toFixed(2) : '0.00'}
+                                </span>
+                                <span className="stat-subtext">
+                                    Média por pedido
+                                </span>
+                            </div>
+                        </div>
+
+                        <div className="charts-row">
+                            <div className="chart-section" style={{ flex: 2 }}>
+                                <div className="chart-header">
+                                    <h3>Top 5 Produtos Mais Vendidos</h3>
+                                </div>
+                                <div style={{ width: '100%', height: 300 }}>
+                                    <ResponsiveContainer>
+                                        <BarChart data={stats.topItems} layout="vertical" margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                                            <XAxis type="number" hide />
+                                            <YAxis dataKey="name" type="category" width={150} tick={{ fontSize: 12 }} />
+                                            <Tooltip formatter={(value) => [`${value} unidades`, 'Vendas']} />
+                                            <Bar dataKey="value" fill="var(--color-primary)" radius={[0, 4, 4, 0]} barSize={20} />
+                                        </BarChart>
+                                    </ResponsiveContainer>
                                 </div>
                             </div>
 
-                            <div className="charts-row">
-                                <div className="chart-section" style={{ flex: 2 }}>
-                                    <div className="chart-header">
-                                        <h3>Top 5 Produtos Mais Vendidos</h3>
-                                    </div>
-                                    <div style={{ width: '100%', height: 300 }}>
-                                        <ResponsiveContainer>
-                                            <BarChart data={stats.topItems} layout="vertical" margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                                                <XAxis type="number" hide />
-                                                <YAxis dataKey="name" type="category" width={150} tick={{ fontSize: 12 }} />
-                                                <Tooltip formatter={(value) => [`${value} unidades`, 'Vendas']} />
-                                                <Bar dataKey="value" fill="var(--color-primary)" radius={[0, 4, 4, 0]} barSize={20} />
-                                            </BarChart>
-                                        </ResponsiveContainer>
-                                    </div>
+                            <div className="chart-section" style={{ flex: 1 }}>
+                                <div className="chart-header">
+                                    <h3>Pagamentos (Mês)</h3>
                                 </div>
 
-                                <div className="chart-section" style={{ flex: 1 }}>
-                                    <div className="chart-header">
-                                        <h3>Pagamentos (Mês)</h3>
+                                <div className="payment-method-stats">
+                                    <div className="payment-stat">
+                                        <h4><div style={{ display: 'inline-block', width: '10px', height: '10px', borderRadius: '50%', background: '#3b82f6', marginRight: '5px' }}></div>PIX</h4>
+                                        <p>R$ {stats.pixTotal.toFixed(2)}</p>
                                     </div>
-
-                                    <div className="payment-method-stats">
-                                        <div className="payment-stat">
-                                            <h4><div style={{ display: 'inline-block', width: '10px', height: '10px', borderRadius: '50%', background: '#3b82f6', marginRight: '5px' }}></div>PIX</h4>
-                                            <p>R$ {stats.pixTotal.toFixed(2)}</p>
-                                        </div>
-                                        <div className="payment-stat">
-                                            <h4><div style={{ display: 'inline-block', width: '10px', height: '10px', borderRadius: '50%', background: '#10b981', marginRight: '5px' }}></div>Dinheiro</h4>
-                                            <p>R$ {stats.moneyTotal.toFixed(2)}</p>
-                                        </div>
+                                    <div className="payment-stat">
+                                        <h4><div style={{ display: 'inline-block', width: '10px', height: '10px', borderRadius: '50%', background: '#10b981', marginRight: '5px' }}></div>Dinheiro</h4>
+                                        <p>R$ {stats.moneyTotal.toFixed(2)}</p>
                                     </div>
                                 </div>
                             </div>
-                        </>
+                        </div>
+                    </>
                 )}
-                    </main>
+            </main>
         </div>
     );
 };
