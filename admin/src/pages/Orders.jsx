@@ -1,13 +1,21 @@
-
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../supabaseClient';
 import Header from '../components/Header';
+import ConfirmationModal from '../components/ConfirmationModal';
 import { RefreshCw, Check, X, Clock } from 'lucide-react';
 import './Orders.css';
 
 const Orders = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [modalConfig, setModalConfig] = useState({
+        isOpen: false,
+        title: '',
+        message: '',
+        confirmText: '',
+        isDestructive: false,
+        onConfirm: () => { }
+    });
 
     useEffect(() => {
         fetchOrders();
@@ -36,9 +44,29 @@ const Orders = () => {
         }
     };
 
-    const updateStatus = async (id, newStatus) => {
-        if (!window.confirm(`Deseja marcar este pedido como ${newStatus === 'approved' ? 'Pronto/Entregue' : 'Cancelado'}?`)) return;
+    const handleUpdateStatus = (id, newStatus) => {
+        if (newStatus === 'approved') {
+            setModalConfig({
+                isOpen: true,
+                title: 'Concluir Pedido',
+                message: 'Tem certeza que deseja marcar este pedido como pronto/entregue?',
+                confirmText: 'Sim, Concluir',
+                isDestructive: false,
+                onConfirm: () => executeUpdate(id, newStatus)
+            });
+        } else {
+            setModalConfig({
+                isOpen: true,
+                title: 'Cancelar Pedido',
+                message: 'Tem certeza que deseja cancelar este pedido? Esta ação não pode ser desfeita.',
+                confirmText: 'Sim, Cancelar',
+                isDestructive: true,
+                onConfirm: () => executeUpdate(id, newStatus)
+            });
+        }
+    };
 
+    const executeUpdate = async (id, newStatus) => {
         try {
             const { error } = await supabase
                 .from('orders')
@@ -62,9 +90,19 @@ const Orders = () => {
         <div className="orders-container">
             <Header />
 
+            <ConfirmationModal
+                isOpen={modalConfig.isOpen}
+                onClose={() => setModalConfig(prev => ({ ...prev, isOpen: false }))}
+                title={modalConfig.title}
+                message={modalConfig.message}
+                confirmText={modalConfig.confirmText}
+                isDestructive={modalConfig.isDestructive}
+                onConfirm={modalConfig.onConfirm}
+            />
+
             <main className="orders-main">
                 <div className="orders-header">
-                    <h2>Pedidos Recentes</h2>
+                    <h2>Pedidos Ativos</h2>
                     <button className="refresh-btn" onClick={fetchOrders}>
                         <RefreshCw size={18} /> Atualizar
                     </button>
@@ -125,10 +163,10 @@ const Orders = () => {
 
                                     {order.status === 'pending' && (
                                         <div className="order-actions">
-                                            <button className="action-btn btn-approve" onClick={() => updateStatus(order.id, 'approved')}>
+                                            <button className="action-btn btn-approve" onClick={() => handleUpdateStatus(order.id, 'approved')}>
                                                 <Check size={18} /> Pronto
                                             </button>
-                                            <button className="action-btn btn-reject" onClick={() => updateStatus(order.id, 'rejected')}>
+                                            <button className="action-btn btn-reject" onClick={() => handleUpdateStatus(order.id, 'rejected')}>
                                                 <X size={18} /> Cancelar
                                             </button>
                                         </div>
