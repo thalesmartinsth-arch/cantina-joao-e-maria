@@ -8,8 +8,16 @@ import './History.css';
 const History = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]);
-    const [endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
+    const getTodayString = () => {
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        return `${yyyy}-${mm}-${dd}`;
+    };
+
+    const [startDate, setStartDate] = useState(getTodayString());
+    const [endDate, setEndDate] = useState(getTodayString());
 
     useEffect(() => {
         fetchHistory();
@@ -18,12 +26,12 @@ const History = () => {
     const fetchHistory = async () => {
         setLoading(true);
         try {
-            // Adjust dates for comparison
-            const start = new Date(startDate);
-            start.setHours(0, 0, 0, 0);
+            // Adjust dates for comparison using Local Time
+            const [startYear, startMonth, startDay] = startDate.split('-').map(Number);
+            const start = new Date(startYear, startMonth - 1, startDay, 0, 0, 0, 0);
 
-            const end = new Date(endDate);
-            end.setHours(23, 59, 59, 999);
+            const [endYear, endMonth, endDay] = endDate.split('-').map(Number);
+            const end = new Date(endYear, endMonth - 1, endDay, 23, 59, 59, 999);
 
             const { data, error } = await supabase
                 .from('orders')
