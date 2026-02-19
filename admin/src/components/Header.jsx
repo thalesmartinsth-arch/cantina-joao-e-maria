@@ -42,6 +42,20 @@ const Header = () => {
                     >
                         📋 Pedidos
                     </button>
+                    <button
+                        className="btn"
+                        style={{ background: 'transparent', color: 'var(--color-text)', border: '1px solid var(--border-color)' }}
+                        onClick={() => navigate('/financial')}
+                    >
+                        💰 Financeiro
+                    </button>
+                    <button
+                        className="btn"
+                        style={{ background: 'transparent', color: 'var(--color-text)', border: '1px solid var(--border-color)' }}
+                        onClick={() => navigate('/history')}
+                    >
+                        📜 Histórico
+                    </button>
                 </nav>
 
                 <div className="header-actions">
