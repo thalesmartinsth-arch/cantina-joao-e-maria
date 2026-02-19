@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from '../supabaseClient';
 import Header from '../components/Header';
 import { Printer, Calendar, Search } from 'lucide-react';
+import logo from '../assets/logo.png';
 import './History.css';
 
 const History = () => {
@@ -153,6 +154,65 @@ const History = () => {
                     )}
                 </div>
             </main>
+
+            {/* Layout Exclusivo para Impressão */}
+            <div className="print-report">
+                <div className="print-header">
+                    <div className="print-logo">
+                        <img src={logo} alt="Logo" />
+                    </div>
+                    <div className="print-info">
+                        <h1>Cantina João e Maria</h1>
+                        <p>CNPJ: 00.000.000/0001-00</p>
+                        <p>Telefone: (00) 00000-0000</p>
+                        <p>Data de Emissão: {new Date().toLocaleString('pt-BR')}</p>
+                    </div>
+                </div>
+
+                <h2 className="print-title">Relatório de Vendas</h2>
+                <p className="print-period">Período: {new Date(startDate).toLocaleDateString('pt-BR', { timeZone: 'UTC' })} a {new Date(endDate).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</p>
+
+                <table className="print-table">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Cliente</th>
+                            <th>Itens</th>
+                            <th>Qtd</th>
+                            <th>Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {orders.map(order => (
+                            <tr key={order.id}>
+                                <td>{new Date(order.created_at).toLocaleDateString('pt-BR')} <br /> {new Date(order.created_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</td>
+                                <td>
+                                    {order.customer_name}<br />
+                                    <small>{order.delivery_info?.student}</small>
+                                </td>
+                                <td>
+                                    {order.items?.map((item, idx) => (
+                                        <div key={idx}>{item.name}</div>
+                                    ))}
+                                </td>
+                                <td>
+                                    {order.items?.map((item, idx) => (
+                                        <div key={idx}>{item.quantity}</div>
+                                    ))}
+                                </td>
+                                <td>{formatCurrency(order.total_amount)}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+
+                <div className="print-footer">
+                    <div className="print-total">
+                        <span>Total Geral</span>
+                        <strong>{formatCurrency(orders.reduce((acc, curr) => acc + (parseFloat(curr.total_amount) || 0), 0))}</strong>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };
