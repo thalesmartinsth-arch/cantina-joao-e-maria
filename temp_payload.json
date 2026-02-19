@@ -1,0 +1,15 @@
+{
+    "items": [
+        {
+            "id": "1",
+            "title": "Test Product",
+            "quantity": 1,
+            "unit_price": 1.00,
+            "price": 1.00
+        }
+    ],
+    "payer": {
+        "name": "Debug Tester",
+        "email": "debug@tester.com"
+    }
+}

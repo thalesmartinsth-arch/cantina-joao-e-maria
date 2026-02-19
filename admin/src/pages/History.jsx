@@ -65,6 +65,7 @@ const History = () => {
     const getStatusBadge = (status) => {
         switch (status) {
             case 'approved': return <span className="status-badge bg-green">Concluído</span>;
+            case 'paid': return <span className="status-badge bg-blue">Pago (Aberto)</span>;
             case 'pending': return <span className="status-badge bg-yellow">Pendente</span>;
             case 'rejected': return <span className="status-badge bg-red">Cancelado</span>;
             default: return <span className="status-badge">{status}</span>;

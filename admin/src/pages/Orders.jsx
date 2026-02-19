@@ -27,11 +27,11 @@ const Orders = () => {
     const fetchOrders = async () => {
         setLoading(true);
         try {
-            // Buscando pedidos pendentes (ativos)
+            // Buscando pedidos pendentes (ativos) e pagos (PIX antes de entregar)
             const { data, error } = await supabase
                 .from('orders')
                 .select('*')
-                .eq('status', 'pending')
+                .in('status', ['pending', 'paid'])
                 .order('created_at', { ascending: false })
                 .limit(50);
 
@@ -161,7 +161,7 @@ const Orders = () => {
                                         <span className="total-amount">R$ {order.total_amount?.toFixed(2)}</span>
                                     </div>
 
-                                    {order.status === 'pending' && (
+                                    {(order.status === 'pending' || order.status === 'paid') && (
                                         <div className="order-actions">
                                             <button className="action-btn btn-approve" onClick={() => handleUpdateStatus(order.id, 'approved')}>
                                                 <Check size={18} /> Pronto

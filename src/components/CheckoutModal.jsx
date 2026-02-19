@@ -86,12 +86,16 @@ const CheckoutModal = () => {
         // Note: In real app, use useRef for intervalId to clear it properly on close.
     };
 
-    const finalizeOrder = async (paymentId = null) => {
-        // e.preventDefault() not needed if called from polling
+    const [lastOrderDetails, setLastOrderDetails] = useState(null); // { id, total, items, method }
 
+    const finalizeOrder = async (paymentId = null) => {
         try {
             setLoading(true);
             // 1. Salvar no Supabase
+            // Status 'paid' means payment confirmed, but order is NOT finished (approved).
+            // Admin will change 'paid' -> 'approved' (Done).
+            const orderStatus = 'paid';
+
             const { data: orderData, error: orderError } = await supabase
                 .from('orders')
                 .insert([{
@@ -100,7 +104,7 @@ const CheckoutModal = () => {
                     items: cartItems,
                     total_amount: cartTotal,
                     payment_method: formData.paymentMethod,
-                    status: 'approved', // If comming from PIX polling, it's approved. If manual 'money', it's pending.
+                    status: orderStatus,
                     delivery_info: {
                         student: formData.studentName,
                         class: formData.className
@@ -113,6 +117,15 @@ const CheckoutModal = () => {
             if (orderError) throw orderError;
 
             const orderId = orderData.id.split('-')[0].toUpperCase();
+
+            // Store details for WhatsApp BEFORE clearing cart
+            setLastOrderDetails({
+                id: orderId,
+                total: cartTotal,
+                items: [...cartItems],
+                method: 'pix',
+                guardianName: formData.guardianName
+            });
 
             // Success! Show confirmation screen instead of redirecting
             setOrderSuccess({ id: orderId, method: 'pix' });
@@ -149,6 +162,15 @@ const CheckoutModal = () => {
 
             const orderId = data.id.split('-')[0].toUpperCase();
 
+            // Store details for WhatsApp BEFORE clearing cart
+            setLastOrderDetails({
+                id: orderId,
+                total: cartTotal,
+                items: [...cartItems],
+                method: 'money',
+                guardianName: formData.guardianName
+            });
+
             // Success!
             setOrderSuccess({ id: orderId, method: 'money' });
             clearCart();
@@ -163,11 +185,15 @@ const CheckoutModal = () => {
 
     // Function to manually open WhatsApp if user wants to
     const openWhatsApp = () => {
-        if (!orderSuccess) return;
+        if (!orderSuccess || !lastOrderDetails) return;
 
-        const message = orderSuccess.method === 'pix'
-            ? `✅ *Pedido Confirmado!* 🍔 \n🆔 *Pedido #:* ${orderSuccess.id}\n👤 *Responsável:* ${formData.guardianName}\n💰 *Pagamento:* PIX (Pago)\n💲 *Total:* R$ ${cartTotal.toFixed(2)}`
-            : `👋 *Novo Pedido - Dinheiro* 🍔\n🆔 *Pedido #:* ${orderSuccess.id}\n👤 *Responsável:* ${formData.guardianName}\n💰 *Pagamento:* Dinheiro\n💲 *Total:* R$ ${cartTotal.toFixed(2)}`;
+        const { id, total, items, method, guardianName } = lastOrderDetails;
+
+        let itemsList = items.map(i => `  • ${i.quantity}x ${i.name}`).join('\n');
+
+        const message = method === 'pix'
+            ? `✅ *Pedido Confirmado!* 🍔 \n🆔 *Pedido #:* ${id}\n👤 *Responsável:* ${guardianName}\n💰 *Pagamento:* PIX (Pago)\n💲 *Total:* R$ ${total.toFixed(2)}\n\n📋 *Itens:*\n${itemsList}`
+            : `👋 *Novo Pedido - Dinheiro* 🍔\n🆔 *Pedido #:* ${id}\n👤 *Responsável:* ${guardianName}\n💰 *Pagamento:* Dinheiro\n💲 *Total:* R$ ${total.toFixed(2)}\n\n📋 *Itens:*\n${itemsList}`;
 
         const phoneNumber = "55" + formData.phone.replace(/\D/g, '');
         window.open(`https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`, '_blank');
