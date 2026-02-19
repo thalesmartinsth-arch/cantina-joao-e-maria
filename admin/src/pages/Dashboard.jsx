@@ -105,61 +105,7 @@ const Dashboard = () => {
                 <div className="actions-bar">
                     <h2>Produtos ({products.length})</h2>
                     <div className="action-buttons">
-                        <button
-                            onClick={handleImportProducts}
-                            className="import-btn"
-                            disabled={importing}
-                        >
-                            <Upload size={18} /> {importing ? 'Importando...' : 'Importar Produtos Padrão'}
-                        </button>
 
-                        <button
-                            className="btn"
-                            style={{
-                                background: 'var(--color-secondary)',
-                                color: '#111827',
-                                border: 'none',
-                                padding: '0.75rem 1.5rem',
-                                borderRadius: 'var(--radius-full)',
-                                fontWeight: '600',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.5rem',
-                                cursor: 'pointer'
-                            }}
-                            onClick={async () => {
-                                if (!window.confirm('Isso vai atualizar os produtos existentes (Kapo, Tial, etc) com os sabores padrão. Continuar?')) return;
-                                setLoading(true);
-                                try {
-                                    // List of updates
-                                    const updates = [
-                                        { name: 'Kapo', options: ["Morango", "Uva", "Laranja", "Abacaxi", "Maracujá"] },
-                                        { name: 'Suco Tial', options: ["Uva", "Pêssego", "Goiaba", "Manga", "Maracujá"] },
-                                        { name: 'Suco Natural', options: ["Laranja", "Limão", "Maracujá", "Uva Integral"] },
-                                        { name: 'Bolo de Pote', options: ["Brigadeiro", "Leite Ninho", "Prestígio", "Cenoura com Chocolate", "Maracujá", "Limão"] },
-                                        { name: 'Açaí Pequeno', options: ["Puro", "Com Banana", "Com Morango", "Com Leite Ninho", "Com Paçoca"] },
-                                        { name: 'Açaí Grande', options: ["Puro", "Com Banana", "Com Morango", "Com Leite Ninho", "Com Paçoca"] },
-                                    ];
-
-                                    for (const update of updates) {
-                                        const { error } = await supabase
-                                            .from('products')
-                                            .update({ options: update.options })
-                                            .eq('name', update.name);
-                                        if (error) console.error(`Erro ao atualizar ${update.name}:`, error);
-                                    }
-
-                                    alert('Sabores atualizados com sucesso!');
-                                    fetchProducts();
-                                } catch (err) {
-                                    alert('Erro ao atualizar sabores: ' + err.message);
-                                } finally {
-                                    setLoading(false);
-                                }
-                            }}
-                        >
-                            🔄 Atualizar Sabores
-                        </button>
                         <button className="add-btn" onClick={handleNewProduct}>
                             <Plus size={18} /> Novo Produto
                         </button>
