@@ -171,7 +171,7 @@ const Orders = () => {
                                             </button>
                                         </div>
                                     )}
-                                    {order.status !== 'pending' && (
+                                    {order.status !== 'pending' && order.status !== 'paid' && (
                                         <div style={{ marginTop: '1rem', textAlign: 'center', fontWeight: 'bold', color: order.status === 'approved' ? '#10b981' : '#ef4444' }}>
                                             {order.status === 'approved' ? '✅ Pedido Concluído' : '❌ Pedido Cancelado'}
                                         </div>
