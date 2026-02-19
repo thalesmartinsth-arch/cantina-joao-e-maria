@@ -2,19 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from '../supabaseClient';
 import Header from '../components/Header';
 import ConfirmationModal from '../components/ConfirmationModal';
-import { RefreshCw, Check, X, Clock } from 'lucide-react';
 import './Orders.css';
 
 const Orders = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [modalConfig, setModalConfig] = useState({
-        isOpen: false,
-        title: '',
-        message: '',
-        confirmText: '',
-        isDestructive: false,
-        onConfirm: () => { }
+        isOpen: false, title: '', message: '', confirmText: '', isDestructive: false, onConfirm: () => { }
     });
 
     useEffect(() => {
@@ -24,7 +18,6 @@ const Orders = () => {
     const fetchOrders = async () => {
         setLoading(true);
         try {
-            // Buscando pedidos pendentes (ativos) e pagos (PIX antes de entregar)
             const { data, error } = await supabase
                 .from('orders')
                 .select('*')
@@ -32,14 +25,14 @@ const Orders = () => {
                 .order('created_at', { ascending: false })
                 .limit(50);
 
-            if (error) throw error;
-
-            // Ensure data is array before setting state
-            const safeData = data || [];
-            setOrders(safeData);
+            if (error) {
+                console.error('Supabase error:', error);
+                setOrders([]);
+            } else {
+                setOrders(Array.isArray(data) ? data : []);
+            }
         } catch (error) {
-            console.error('Erro ao buscar pedidos:', error);
-            // On error, set empty to ensure no crash
+            console.error('Catch error:', error);
             setOrders([]);
         } finally {
             setLoading(false);
@@ -47,56 +40,48 @@ const Orders = () => {
     };
 
     const handleUpdateStatus = (id, newStatus) => {
-        if (newStatus === 'approved') {
-            setModalConfig({
-                isOpen: true,
-                title: 'Concluir Pedido',
-                message: 'Tem certeza que deseja marcar este pedido como pronto/entregue?',
-                confirmText: 'Sim, Concluir',
-                isDestructive: false,
-                onConfirm: () => executeUpdate(id, newStatus)
-            });
-        } else {
-            setModalConfig({
-                isOpen: true,
-                title: 'Cancelar Pedido',
-                message: 'Tem certeza que deseja cancelar este pedido? Esta ação não pode ser desfeita.',
-                confirmText: 'Sim, Cancelar',
-                isDestructive: true,
-                onConfirm: () => executeUpdate(id, newStatus)
-            });
-        }
+        const title = newStatus === 'approved' ? 'Concluir Pedido' : 'Cancelar Pedido';
+        const message = newStatus === 'approved'
+            ? 'Marcar como entregue?'
+            : 'Cancelar pedido?';
+
+        setModalConfig({
+            isOpen: true,
+            title,
+            message,
+            confirmText: newStatus === 'approved' ? 'Confirmar' : 'Cancelar',
+            isDestructive: newStatus !== 'approved',
+            onConfirm: () => executeUpdate(id, newStatus)
+        });
     };
 
     const executeUpdate = async (id, newStatus) => {
         try {
-            const { error } = await supabase
-                .from('orders')
-                .update({ status: newStatus })
-                .eq('id', id);
-
-            if (error) throw error;
-            fetchOrders(); // Recarrega a lista
+            await supabase.from('orders').update({ status: newStatus }).eq('id', id);
+            fetchOrders();
         } catch (error) {
-            console.error('Erro ao atualizar status:', error);
-            alert('Erro ao atualizar status.');
+            console.error(error);
+            alert('Erro ao atualizar.');
         }
     };
 
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        return date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) + ' - ' + date.toLocaleDateString('pt-BR');
+    const formatCurrency = (val) => {
+        try {
+            const num = parseFloat(val);
+            if (isNaN(num)) return 'R$ 0,00';
+            return 'R$ ' + num.toFixed(2);
+        } catch (e) { return 'R$ --'; }
     };
 
-    const formatCurrency = (value) => {
-        const num = parseFloat(value);
-        return isNaN(num) ? 'R$ 0,00' : 'R$ ' + num.toFixed(2);
+    const formatDate = (dateString) => {
+        try {
+            return new Date(dateString).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        } catch (e) { return '--:--'; }
     };
 
     return (
         <div className="orders-container">
             <Header />
-
             <ConfirmationModal
                 isOpen={modalConfig.isOpen}
                 onClose={() => setModalConfig(prev => ({ ...prev, isOpen: false }))}
@@ -111,83 +96,60 @@ const Orders = () => {
                 <div className="orders-header">
                     <h2>Pedidos Ativos</h2>
                     <button className="refresh-btn" onClick={() => fetchOrders()}>
-                        <RefreshCw size={18} /> Atualizar
+                        &#x21bb; Atualizar
                     </button>
                 </div>
 
-                {loading && orders.length === 0 ? (
-                    <p style={{ textAlign: 'center', marginTop: '2rem' }}>Carregando pedidos...</p>
-                ) : (
-                    <div className="orders-grid">
-                        {orders.length === 0 ? (
-                            <div className="empty-state">
-                                <Clock size={48} style={{ marginBottom: '1rem', opacity: 0.5 }} />
-                                <h3>Nenhum pedido encontrado</h3>
-                                <p>Os pedidos feitos no app aparecerão aqui.</p>
-                            </div>
-                        ) : (
-                            orders.map((order) => (
-                                <div key={order.id} className={`order-card status-${order.status}`}>
-                                    <div className="order-header">
-                                        <span className="order-id">#{order.id.split('-')[0].toUpperCase()}</span>
-                                        <span className="order-time">{formatDate(order.created_at)}</span>
-                                    </div>
+                {loading && <p style={{ textAlign: 'center', padding: '20px' }}>Carregando...</p>}
 
-                                    <div className="customer-info">
-                                        <div className="info-row">
-                                            <span className="info-label">Aluno:</span>
-                                            <span>{order.delivery_info?.student || 'N/A'}</span>
-                                        </div>
-                                        <div className="info-row">
-                                            <span className="info-label">Turma:</span>
-                                            <span>{order.delivery_info?.class || 'N/A'}</span>
-                                        </div>
-                                        <div className="info-row">
-                                            <span className="info-label">Resp:</span>
-                                            <span>{order.customer_name}</span>
-                                        </div>
-                                    </div>
-
-                                    <div className="order-items">
-                                        {Array.isArray(order.items) && order.items.map((item, idx) => (
-                                            <div key={idx} className="item-row">
-                                                <span>
-                                                    <span className="item-quantity">{item?.quantity || 1}x</span>
-                                                    {' '}{item?.name || 'Item'}
-                                                    {item?.selectedOption && <span style={{ fontSize: '0.8em', color: '#666' }}> ({item.selectedOption})</span>}
-                                                </span>
-                                                <span>{formatCurrency((item?.price || 0) * (item?.quantity || 1))}</span>
-                                            </div>
-                                        ))}
-                                    </div>
-
-                                    <div className="order-footer">
-                                        <span className={`payment-method ${order.payment_method}`}>
-                                            {order.payment_method === 'pix' ? '💠 PIX' : '💵 Dinheiro'}
-                                        </span>
-                                        <span className="total-amount">{formatCurrency(order.total_amount)}</span>
-                                    </div>
-
-                                    {(order.status === 'pending' || order.status === 'paid') && (
-                                        <div className="order-actions">
-                                            <button className="action-btn btn-approve" onClick={() => handleUpdateStatus(order.id, 'approved')}>
-                                                <Check size={18} /> Pronto
-                                            </button>
-                                            <button className="action-btn btn-reject" onClick={() => handleUpdateStatus(order.id, 'rejected')}>
-                                                <X size={18} /> Cancelar
-                                            </button>
-                                        </div>
-                                    )}
-                                    {order.status !== 'pending' && order.status !== 'paid' && (
-                                        <div style={{ marginTop: '1rem', textAlign: 'center', fontWeight: 'bold', color: order.status === 'approved' ? '#10b981' : '#ef4444' }}>
-                                            {order.status === 'approved' ? '✅ Pedido Concluído' : '❌ Pedido Cancelado'}
-                                        </div>
-                                    )}
-                                </div>
-                            ))
-                        )}
+                {!loading && orders.length === 0 && (
+                    <div className="empty-state">
+                        <p>Nenhum pedido ativo.</p>
                     </div>
                 )}
+
+                <div className="orders-grid">
+                    {orders.map((order) => (
+                        <div key={order.id || Math.random()} className={`order-card status-${order.status || 'pending'}`}>
+                            <div className="order-header">
+                                <span className="order-id">#{typeof order.id === 'string' ? order.id.split('-')[0].toUpperCase() : order.id}</span>
+                                <span className="order-time">{formatDate(order.created_at)}</span>
+                            </div>
+
+                            <div className="customer-info" style={{ margin: '10px 0' }}>
+                                <div><strong>{order.customer_name || 'Cliente'}</strong></div>
+                                <div style={{ fontSize: '0.9em', color: '#666' }}>
+                                    {order.delivery_info?.student} - {order.delivery_info?.class}
+                                </div>
+                            </div>
+
+                            <div className="order-items" style={{ background: '#f9f9f9', padding: '10px', borderRadius: '4px', marginBottom: '10px' }}>
+                                {Array.isArray(order.items) ? order.items.map((item, idx) => (
+                                    <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                                        <span>{item.quantity}x {item.name}</span>
+                                        <span>{formatCurrency((item.price || 0) * (item.quantity || 1))}</span>
+                                    </div>
+                                )) : <p>Sem itens</p>}
+                            </div>
+
+                            <div className="order-footer" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <span className={`payment-method ${order.payment_method}`}>
+                                    {order.payment_method === 'pix' ? 'PIX' : '$$$'}
+                                </span>
+                                <span style={{ fontWeight: 'bold' }}>{formatCurrency(order.total_amount)}</span>
+                            </div>
+
+                            <div className="order-actions" style={{ marginTop: '15px', display: 'flex', gap: '10px' }}>
+                                <button className="action-btn btn-approve" onClick={() => handleUpdateStatus(order.id, 'approved')}>
+                                    &#10003; Pronto
+                                </button>
+                                <button className="action-btn btn-reject" onClick={() => handleUpdateStatus(order.id, 'rejected')}>
+                                    &#10005; Cancelar
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </main>
         </div>
     );
