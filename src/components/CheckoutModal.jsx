@@ -23,6 +23,7 @@ const CheckoutModal = () => {
     const [loading, setLoading] = useState(false);
     const [pixData, setPixData] = useState(null); // { qr_code, qr_code_base64, id }
     const [paymentStatus, setPaymentStatus] = useState('pending'); // pending, approved
+    const [lastOrderDetails, setLastOrderDetails] = useState(null); // { id, total, items, method }
 
     if (!isCheckoutOpen) return null;
 
@@ -85,8 +86,6 @@ const CheckoutModal = () => {
         // Cleanup interval on unmount or close (handled by effect ideally, but simplified here)
         // Note: In real app, use useRef for intervalId to clear it properly on close.
     };
-
-    const [lastOrderDetails, setLastOrderDetails] = useState(null); // { id, total, items, method }
 
     const finalizeOrder = async (paymentId = null) => {
         try {
