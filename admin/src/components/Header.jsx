@@ -27,6 +27,23 @@ const Header = () => {
                     </div>
                 </div>
 
+                <nav style={{ display: 'flex', gap: '1rem', marginRight: 'auto', marginLeft: '2rem' }}>
+                    <button
+                        className="btn"
+                        style={{ background: 'transparent', color: 'var(--color-text)', border: '1px solid var(--border-color)' }}
+                        onClick={() => navigate('/dashboard')}
+                    >
+                        📦 Produtos
+                    </button>
+                    <button
+                        className="btn"
+                        style={{ background: 'var(--color-primary)', color: 'white' }}
+                        onClick={() => navigate('/orders')}
+                    >
+                        📋 Pedidos
+                    </button>
+                </nav>
+
                 <div className="header-actions">
                     <button className="theme-toggle" onClick={toggleTheme} aria-label="Alterar tema">
                         {theme === 'default' ? <Sun size={24} /> : <Moon size={24} />}
