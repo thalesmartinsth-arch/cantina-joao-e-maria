@@ -1,14 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useCart } from '../context/CartContext';
+import { useCartAnimation } from '../context/CartAnimationContext';
 import OptionsModal from './OptionsModal';
 import PartyOptionsModal from './PartyOptionsModal';
 import '../styles/ProductCard.css';
 
 const ProductCard = ({ product }) => {
     const { addToCart } = useCart();
+    const { animateAddToCart } = useCartAnimation();
     const [showOptions, setShowOptions] = useState(false);
     const [showPartyOptions, setShowPartyOptions] = useState(false);
     const [selectedOption, setSelectedOption] = useState('');
+    const imgRef = useRef(null);
+
+    const triggerFlyAnimation = () => {
+        if (imgRef.current) {
+            const rect = imgRef.current.getBoundingClientRect();
+            const src = product.image_type === 'local' ? `/images/${product.image}` : product.image;
+            animateAddToCart(rect, src);
+        }
+    };
 
     const handleAddToCart = () => {
         if (product.weekly_menu) {
@@ -27,9 +38,11 @@ const ProductCard = ({ product }) => {
                 selectedOption: selectedOption
             };
             addToCart(customProduct);
+            triggerFlyAnimation();
             setSelectedOption(''); // Reset after adding
         } else {
             addToCart(product);
+            triggerFlyAnimation();
         }
     };
 
@@ -44,6 +57,7 @@ const ProductCard = ({ product }) => {
         };
 
         addToCart(customProduct);
+        triggerFlyAnimation();
         setShowOptions(false);
     };
 
@@ -56,6 +70,7 @@ const ProductCard = ({ product }) => {
         };
 
         addToCart(customProduct);
+        triggerFlyAnimation();
         setShowPartyOptions(false);
     };
 
@@ -64,6 +79,7 @@ const ProductCard = ({ product }) => {
             <div className="product-card glass">
                 <div className="product-image-container">
                     <img
+                        ref={imgRef}
                         src={product.image_type === 'local' ? `/images/${product.image}` : product.image}
                         alt={product.name}
                         className="product-image"

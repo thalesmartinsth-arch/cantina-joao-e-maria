@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useCartAnimation } from '../context/CartAnimationContext';
 import logo from '../assets/logo.png';
 import { useTheme } from '../context/ThemeContext';
 import '../styles/Header.css';
@@ -8,6 +9,14 @@ import '../styles/Header.css';
 const Header = () => {
     const { cartCount, toggleCart } = useCart();
     const { theme, toggleTheme } = useTheme();
+    const { registerCartIcon, isCartBumping } = useCartAnimation();
+    const cartBtnRef = useRef(null);
+
+    useEffect(() => {
+        if (cartBtnRef.current) {
+            registerCartIcon(cartBtnRef.current);
+        }
+    }, [registerCartIcon]);
 
     return (
         <header className="header glass">
@@ -26,7 +35,11 @@ const Header = () => {
                     </button>
                     <Link to="/" className="nav-link">Home</Link>
                     <a href="#menu" className="nav-link">Menu</a>
-                    <button className="cart-btn" onClick={toggleCart}>
+                    <button
+                        className={`cart-btn ${isCartBumping ? 'bump' : ''}`}
+                        onClick={toggleCart}
+                        ref={cartBtnRef}
+                    >
                         🛒 Carrinho
                         {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
                     </button>
