@@ -1,0 +1,39 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useCart } from '../context/CartContext';
+import logo from '../assets/logo.png';
+import { useTheme } from '../context/ThemeContext';
+import '../styles/Header.css';
+
+const Header = () => {
+    const { cartCount, toggleCart } = useCart();
+    const { theme, toggleTheme } = useTheme();
+
+    return (
+        <header className="header glass">
+            <div className="container header-content">
+                <Link to="/" className="brand-logo">
+                    <img src={logo} alt="Cantina João e Maria" />
+                </Link>
+                <nav className="nav-menu">
+                    <button
+                        onClick={toggleTheme}
+                        className="nav-link theme-toggle"
+                        title={theme === 'default' ? "Ativar Modo Claro" : "Ativar Modo Escuro"}
+                        style={{ fontSize: '1.2rem', cursor: 'pointer' }}
+                    >
+                        {theme === 'default' ? '☀️' : '🌙'}
+                    </button>
+                    <Link to="/" className="nav-link">Home</Link>
+                    <a href="#menu" className="nav-link">Menu</a>
+                    <button className="cart-btn" onClick={toggleCart}>
+                        🛒 Carrinho
+                        {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+                    </button>
+                </nav>
+            </div>
+        </header>
+    );
+};
+
+export default Header;

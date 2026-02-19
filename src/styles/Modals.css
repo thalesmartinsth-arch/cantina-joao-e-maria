@@ -1,0 +1,101 @@
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    padding: 1rem;
+    backdrop-filter: blur(5px);
+}
+
+/* Modal Content */
+.modal-content {
+    background: #1a1a1a;
+    /* Default Dark Mode */
+    width: 100%;
+    max-width: 500px;
+    border-radius: var(--radius-md);
+    padding: 2rem;
+    position: relative;
+    border: 1px solid var(--color-primary-glow);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    color: var(--color-text);
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+/* Light Mode Overrides */
+body.high-contrast .modal-content {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    color: var(--color-text);
+}
+
+.modal-content h2 {
+    color: var(--color-primary);
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.modal-close-btn:hover {
+    color: var(--color-primary);
+}
+
+/* Form Elements inside Modal */
+.modal-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem;
+    margin-bottom: 0.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+body.high-contrast .modal-option {
+    background: #f5f5f5;
+    border: 1px solid #e0e0e0;
+}
+
+.modal-option:hover {
+    border-color: var(--color-primary);
+}
+
+.modal-option.selected {
+    background: rgba(255, 94, 0, 0.1);
+    border-color: var(--color-primary);
+}
+
+body.high-contrast .modal-option.selected {
+    background: #fff3e0;
+    border-color: var(--color-primary);
+}
+
+.modal-actions {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+}

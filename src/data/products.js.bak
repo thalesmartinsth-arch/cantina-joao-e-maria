@@ -1,0 +1,418 @@
+import coxinhaImg from '../assets/coxinha.png';
+import tortaImg from '../assets/torta.jpg';
+import cigarreteImg from '../assets/cigarrete.jpg';
+import paoDeQueijoImg from '../assets/pao_de_queijo.jpg';
+import hamburgueteImg from '../assets/Hambúrguete.jpg';
+import burgerImg from '../assets/burger.jpg';
+import pizzaImg from '../assets/pizza.jpg';
+import kapoImg from '../assets/kapo.png';
+import aguaCocoImg from '../assets/agua-coco.jpg';
+import sucoTialImg from '../assets/suco_tial.jpg';
+import gatoradeImg from '../assets/Gatorade.jpg';
+import refrigeranteImg from '../assets/Refrigerante.jpg';
+import spriteImg from '../assets/sprite.jpg';
+import balaCarameloImg from '../assets/bala_caramelo.jpg';
+import batomImg from '../assets/batom.jpg';
+import bisImg from '../assets/bis.jpg';
+import kitkatImg from '../assets/kitkat.jpg';
+import trentoImg from '../assets/Trento.jpg';
+import bolinhoImg from '../assets/bolinho_Bauduco.jpg';
+import finiImg from '../assets/fini.jpg';
+import sucoNaturalImg from '../assets/Suco_Natural.jpg';;
+import brownieImg from '../assets/Brownie.jpg';
+import acaiImg from '../assets/Açai.jpg';
+import lancheBemImg from '../assets/Lanche_bem.jpg';
+import comboFestaImg from '../assets/Combo_Festa.jpg';
+import cupcakeImg from '../assets/Cupcake.jpg'; // User provided
+import boloPoteImg from '../assets/Bolo_de_Pote.jpg'; // User provided
+
+const images = {
+    coxinha: coxinhaImg,
+    paoDeQueijo: paoDeQueijoImg,
+    acai: acaiImg, // Fixed: Use local image
+    torta: tortaImg,
+    cigarrete: cigarreteImg,
+    pizza: pizzaImg,
+    burger: burgerImg,
+    hamburguete: hamburgueteImg,
+    soda: refrigeranteImg,
+    juice: sucoNaturalImg,
+    water: "https://images.unsplash.com/photo-1548839140-29a749e1cf4d?auto=format&fit=crop&w=800&q=80",
+    coconutWater: aguaCocoImg,
+    sweets: balaCarameloImg,
+    chocolate: batomImg,
+    wafer: bisImg,
+    cake: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=80",
+    potCake: boloPoteImg,
+    cupcake: cupcakeImg,
+    brownie: brownieImg,
+    boxJuice: kapoImg,
+    partyKit: comboFestaImg, // Fixed: Use local image
+    lancheBem: lancheBemImg, // Fixed: Use local image
+    // Special Mappings
+    kapo: kapoImg,
+    sucoTial: sucoTialImg,
+    gatorade: gatoradeImg,
+    sprite: spriteImg,
+    batom: batomImg,
+    bis: bisImg,
+    kitkat: kitkatImg,
+    trento: trentoImg,
+    bolinho: bolinhoImg,
+    fini: finiImg,
+    balaCaramelo: balaCarameloImg
+};
+
+export const products = [
+    // SALGADOS
+    {
+        id: 1,
+        name: "Torta de Frango com Bacon",
+        description: "Torta cremosa e suculenta.",
+        price: 9.00,
+        category: "Salgados",
+        image: images.torta
+    },
+    {
+        id: 2,
+        name: "Cigarrete",
+        description: "Salgado clássico crocante.",
+        price: 9.00,
+        category: "Salgados",
+        image: images.cigarrete
+    },
+    {
+        id: 3,
+        name: "Coxinha Grande",
+        description: "A queridinha do Brasil, bem recheada.",
+        price: 9.00,
+        category: "Salgados",
+        image: images.coxinha
+    },
+    {
+        id: 4,
+        name: "Coxinha Pequena (Unid)",
+        description: "Perfeita para um lanche rápido.",
+        price: 2.00,
+        category: "Salgados",
+        image: images.coxinha
+    },
+    {
+        id: 5,
+        name: "Combo 5 Coxinhas",
+        description: "5 unidades de coxinha pequena.",
+        price: 9.90,
+        category: "Salgados",
+        image: images.coxinha
+    },
+    {
+        id: 6,
+        name: "Hambúrguete",
+        description: "Salgado assado tipo hambúrguer.",
+        price: 12.00,
+        category: "Salgados",
+        image: images.hamburguete
+    },
+    {
+        id: 7,
+        name: "Pizza Frango e Calabresa",
+        description: "Fatia ou mini pizza saborosa.",
+        price: 9.00,
+        category: "Salgados",
+        image: images.pizza
+    },
+    {
+        id: 8,
+        name: "Pão de Queijo",
+        description: "Tradicional mineiro.",
+        price: 6.00,
+        category: "Salgados",
+        image: images.paoDeQueijo
+    },
+    {
+        id: 9,
+        name: "Pão de Queijo com Carne",
+        description: "Recheado com patinho.",
+        price: 9.00,
+        category: "Salgados",
+        image: images.paoDeQueijo
+    },
+    {
+        id: 10,
+        name: "Hambúrguer Artesanal",
+        description: "Sabor autêntico e suculento.",
+        price: 12.00,
+        category: "Salgados",
+        image: images.burger
+    },
+
+    // BEBIDAS
+    {
+        id: 11,
+        name: "Kapo",
+        description: "Suco de caixinha refrescante.",
+        price: 5.00,
+        category: "Bebidas",
+        image: images.kapo
+    },
+    {
+        id: 12,
+        name: "Refrigerante",
+        description: "Lata 350ml variados.",
+        price: 4.00,
+        category: "Bebidas",
+        image: images.soda
+    },
+    {
+        id: 13,
+        name: "Água de Coco",
+        description: "Natural e hidratante.",
+        price: 5.00,
+        category: "Bebidas",
+        image: images.coconutWater
+    },
+    {
+        id: 14,
+        name: "Suco Tial",
+        description: "Suco de néctar de frutas.",
+        price: 5.00,
+        category: "Bebidas",
+        image: images.sucoTial
+    },
+    {
+        id: 15,
+        name: "Gatorade",
+        description: "Isotônico para repor as energias.",
+        price: 9.00,
+        category: "Bebidas",
+        image: images.gatorade
+    },
+    {
+        id: 16,
+        name: "Sprite",
+        description: "Refrigerante de limão.",
+        price: 7.00,
+        category: "Bebidas",
+        image: images.sprite
+    },
+    {
+        id: 17,
+        name: "Água Mineral",
+        description: "Sem gás.",
+        price: 4.00,
+        category: "Bebidas",
+        image: images.water
+    },
+    {
+        id: 18,
+        name: "Suco Natural",
+        description: "Laranja, Limão, Maracujá ou Uva Integral.",
+        price: 6.00,
+        category: "Bebidas",
+        image: images.juice
+    },
+
+    // DOCES
+    {
+        id: 19,
+        name: "Bala Caramelo",
+        description: "Doce de leite.",
+        price: 0.75,
+        category: "Doces",
+        image: images.balaCaramelo
+    },
+    {
+        id: 20,
+        name: "Batom",
+        description: "Chocolate ao leite.",
+        price: 3.50,
+        category: "Doces",
+        image: images.batom
+    },
+    {
+        id: 21,
+        name: "Bis",
+        description: "Unidade crocante.",
+        price: 1.00,
+        category: "Doces",
+        image: images.bis
+    },
+    {
+        id: 22,
+        name: "KitKat",
+        description: "Wafer coberto com chocolate.",
+        price: 6.50,
+        category: "Doces",
+        image: images.kitkat
+    },
+    {
+        id: 23,
+        name: "Trento",
+        description: "Chocolate com wafer.",
+        price: 4.50,
+        category: "Doces",
+        image: images.trento
+    },
+    {
+        id: 24,
+        name: "Barra de Cereal",
+        description: "Opção saudável.",
+        price: 5.00,
+        category: "Doces",
+        image: "https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?auto=format&fit=crop&w=800&q=60"
+    },
+    {
+        id: 25,
+        name: "Bolinho Bauducco",
+        description: "Recheado e macio.",
+        price: 5.00,
+        category: "Doces",
+        image: images.bolinho
+    },
+    {
+        id: 26,
+        name: "Fini",
+        description: "Balas de gelatina.",
+        price: 3.50,
+        category: "Doces",
+        image: images.fini
+    },
+    {
+        id: 27,
+        name: "Lacta",
+        description: "Chocolate em barra ou bombom.",
+        price: 5.50,
+        category: "Doces",
+        image: images.chocolate
+    },
+    {
+        id: 28,
+        name: "Bolo de Chocolate",
+        description: "Fatia caseira.",
+        price: 6.00,
+        category: "Doces",
+        image: images.cake
+    },
+    {
+        id: 29,
+        name: "Brownie",
+        description: "Denso e chocolatudo.",
+        price: 9.00,
+        category: "Doces",
+        image: images.brownie
+    },
+    {
+        id: 30,
+        name: "Bolo de Pote",
+        description: "Vários sabores, bem recheado.",
+        price: 12.00,
+        category: "Doces",
+        image: images.potCake
+    },
+    {
+        id: 31,
+        name: "Cupcake",
+        description: "Bolinho decorado e recheado.",
+        price: 9.00,
+        category: "Doces",
+        image: images.cupcake
+    },
+    {
+        id: 32,
+        name: "Açaí Pequeno",
+        description: "Refrescante e energético.",
+        price: 13.50,
+        category: "Doces",
+        image: images.acai
+    },
+    {
+        id: 33,
+        name: "Açaí Grande",
+        description: "Para quem tem muita fome de açaí.",
+        price: 15.50,
+        category: "Doces",
+        image: images.acai
+    },
+    {
+        id: 34,
+        name: "Todinho",
+        description: "Achocolatado clássico.",
+        price: 4.00,
+        category: "Bebidas",
+        image: images.boxJuice
+    },
+    // Lanche Bem
+    {
+        id: 35,
+        name: "Lanche Bem (Com Fruta)",
+        price: 16.90,
+        category: "Lanche Bem",
+        image: images.lancheBem,
+        description: "Lanche diário completo com fruta. (Mensal: R$ 270,40)",
+        weeklyMenu: [
+            { day: "Segunda", item: "Pastel Assado de Frango", beverage: "Suco Natural de Limão", fruit: "Banana" },
+            { day: "Terça", item: "Cigarrete de Presunto e Queijo", beverage: "Suco Natural de Uva", fruit: "Maçã" },
+            { day: "Quarta", item: "Bolo Caseiro de Cenoura", beverage: "Iogurte de Morango", fruit: "Cubinhos de Abacaxi" },
+            { day: "Quinta", item: "Pão de Queijo com Carne", beverage: "Suco Natural de Laranja", fruit: "Melancia" },
+            { day: "Sexta", item: "Bisnaguinha com Requeijão", beverage: "Açaí c/ Leite em pó", fruit: "Banana ou Morango" }
+        ]
+    },
+    {
+        id: 36,
+        name: "Lanche Bem (Sem Fruta)",
+        price: 12.90,
+        category: "Lanche Bem",
+        image: images.lancheBem,
+        description: "Lanche diário completo sem fruta. (Mensal: R$ 206,40)",
+        weeklyMenu: [
+            { day: "Segunda", item: "Pastel Assado de Frango", beverage: "Suco Natural de Limão" },
+            { day: "Terça", item: "Cigarrete de Presunto e Queijo", beverage: "Suco Natural de Uva" },
+            { day: "Quarta", item: "Bolo Caseiro de Cenoura", beverage: "Iogurte de Morango" },
+            { day: "Quinta", item: "Pão de Queijo com Carne", beverage: "Suco Natural de Laranja" },
+            { day: "Sexta", item: "Bisnaguinha com Requeijão", beverage: "Açaí c/ Leite em pó" }
+        ]
+    },
+    // Festas
+    {
+        id: 37,
+        name: "Combo Festa 1 (25 Crianças)",
+        price: 399.00,
+        category: "Festas",
+        image: images.partyKit,
+        description: "Serve 25 crianças! 1 bolo (2,5kg) + 100 salgados + 25 refris. Inclusos: descartáveis.",
+        partyKit: {
+            totalSnacks: 100,
+            snackOptions: [
+                "Coxinha", "Cigarrete", "Rissole de Requeijão", "Rissole de Milho",
+                "Bolinho de Queijo", "Quibe", "Olho de Coruja",
+                "Pastel Assado (Frango c/ Bacon)", "Empadinha", "Churros"
+            ]
+        }
+    },
+    {
+        id: 38,
+        name: "Combo Festa 2 (30 Crianças)",
+        price: 469.00,
+        category: "Festas",
+        image: images.partyKit,
+        description: "Serve 30 crianças! 1 bolo (2,5kg) + 150 salgados + 30 refris. Inclusos: descartáveis.",
+        partyKit: {
+            totalSnacks: 150,
+            snackOptions: [
+                "Coxinha", "Cigarrete", "Rissole de Requeijão", "Rissole de Milho",
+                "Bolinho de Queijo", "Quibe", "Olho de Coruja",
+                "Pastel Assado (Frango c/ Bacon)", "Empadinha", "Churros"
+            ]
+        }
+    },
+    {
+        id: 39,
+        name: "Bolo de Chocolate/Festa (2,5kg)",
+        price: 169.00,
+        category: "Festas",
+        image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=80",
+        description: "Bolo de chocolate ou festa com cobertura de brigadeiro (2,5kg). Inclusos: vela, pratinhos, talheres e guardanapos."
+    }
+];
+
+export const categories = ["Todos", "Salgados", "Bebidas", "Doces", "Lanche Bem", "Festas"];
