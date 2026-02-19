@@ -27,13 +27,13 @@ const Orders = () => {
     const fetchOrders = async () => {
         setLoading(true);
         try {
-            // Buscando pedidos do dia (ou todos recentes)
-            // Ordenando pelos mais recentes primeiro
+            // Buscando pedidos pendentes (ativos)
             const { data, error } = await supabase
                 .from('orders')
                 .select('*')
+                .eq('status', 'pending')
                 .order('created_at', { ascending: false })
-                .limit(50); // Limite de 50 por enquanto
+                .limit(50);
 
             if (error) throw error;
             setOrders(data);
