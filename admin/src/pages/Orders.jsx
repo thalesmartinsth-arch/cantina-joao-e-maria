@@ -2,28 +2,45 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from '../supabaseClient';
 import Header from '../components/Header';
 import ConfirmationModal from '../components/ConfirmationModal';
+import DayPicker from '../components/DayPicker';
+import DailySummary from '../components/DailySummary';
 import './Orders.css';
 
 const Orders = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    // Date Management
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [activityMap, setActivityMap] = useState(new Set());
+
     const [modalConfig, setModalConfig] = useState({
         isOpen: false, title: '', message: '', confirmText: '', isDestructive: false, onConfirm: () => { }
     });
 
     useEffect(() => {
-        fetchOrders();
-    }, []);
+        fetchOrders(selectedDate);
+        fetchMonthActivity(selectedDate);
+    }, [selectedDate]);
 
-    const fetchOrders = async () => {
+    const fetchOrders = async (date) => {
         setLoading(true);
         try {
+            // Start and End of selected day
+            const start = new Date(date);
+            start.setHours(0, 0, 0, 0);
+
+            const end = new Date(date);
+            end.setHours(23, 59, 59, 999);
+
             const { data, error } = await supabase
                 .from('orders')
                 .select('*')
-                .in('status', ['pending', 'paid'])
-                .order('created_at', { ascending: false })
-                .limit(50);
+                // Filter by DATE, not just status. We want to see EVERYTHING for that day.
+                .gte('created_at', start.toISOString())
+                .lte('created_at', end.toISOString())
+                .neq('status', 'cancelled') // Optionally hide cancelled to keep it clean? Let's keep rejected visible if needed.
+                .order('created_at', { ascending: false });
 
             if (error) {
                 console.error('Supabase error:', error);
@@ -36,6 +53,30 @@ const Orders = () => {
             setOrders([]);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const fetchMonthActivity = async (date) => {
+        // Fetch headers only for the whole month to populate dots
+        const year = date.getFullYear();
+        const month = date.getMonth();
+        const start = new Date(year, month, 1);
+        const end = new Date(year, month + 1, 0, 23, 59, 59);
+
+        const { data } = await supabase
+            .from('orders')
+            .select('created_at')
+            .gte('created_at', start.toISOString())
+            .lte('created_at', end.toISOString());
+
+        if (data) {
+            const newActivityMap = new Set();
+            data.forEach(item => {
+                const d = new Date(item.created_at);
+                const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+                newActivityMap.add(key);
+            });
+            setActivityMap(newActivityMap);
         }
     };
 
@@ -58,7 +99,7 @@ const Orders = () => {
     const executeUpdate = async (id, newStatus) => {
         try {
             await supabase.from('orders').update({ status: newStatus }).eq('id', id);
-            fetchOrders();
+            fetchOrders(selectedDate); // Refresh current view
         } catch (error) {
             console.error(error);
             alert('Erro ao atualizar.');
@@ -80,14 +121,12 @@ const Orders = () => {
     };
 
     const getPaymentStatus = (order) => {
-        // PIX with payment_id implies paid. Money is pending until delivery.
         if (order.payment_method === 'pix' && order.payment_id) {
             return { label: '✅ Pagamento Realizado', className: 'pay-status-paid' };
         }
         if (order.payment_method === 'money') {
             return { label: '⚠️ Pagamento Pendente', className: 'pay-status-pending' };
         }
-        // Fallback for Pix without ID (shouldn't happen) or other cases
         return { label: '❓ Verificar Pagamento', className: 'pay-status-unknown' };
     };
 
@@ -105,9 +144,20 @@ const Orders = () => {
             />
 
             <main className="orders-main">
+                {/* New Components */}
+                <DailySummary date={selectedDate} orders={orders} />
+
+                <DayPicker
+                    selectedDate={selectedDate}
+                    onSelect={setSelectedDate}
+                    activityMap={activityMap}
+                />
+
                 <div className="orders-header">
-                    <h2>Pedidos Ativos</h2>
-                    <button className="refresh-btn" onClick={() => fetchOrders()}>
+                    <h2>
+                        {orders.length} {orders.length === 1 ? 'Pedido' : 'Pedidos'}
+                    </h2>
+                    <button className="refresh-btn" onClick={() => fetchOrders(selectedDate)}>
                         &#x21bb; Atualizar
                     </button>
                 </div>
@@ -116,7 +166,7 @@ const Orders = () => {
 
                 {!loading && orders.length === 0 && (
                     <div className="empty-state">
-                        <p>Nenhum pedido ativo.</p>
+                        <p>Nenhum pedido encontrado para este dia.</p>
                     </div>
                 )}
 
@@ -159,14 +209,26 @@ const Orders = () => {
                                     <span className="total-value">{formatCurrency(order.total_amount)}</span>
                                 </div>
 
-                                <div className="order-actions-row">
-                                    <button className="action-btn btn-approve" onClick={() => handleUpdateStatus(order.id, 'approved')}>
-                                        PRONTO
-                                    </button>
-                                    <button className="action-btn btn-reject" onClick={() => handleUpdateStatus(order.id, 'rejected')}>
-                                        CANCELAR
-                                    </button>
-                                </div>
+                                {order.status !== 'approved' && order.status !== 'rejected' && (
+                                    <div className="order-actions-row">
+                                        <button className="action-btn btn-approve" onClick={() => handleUpdateStatus(order.id, 'approved')}>
+                                            PRONTO
+                                        </button>
+                                        <button className="action-btn btn-reject" onClick={() => handleUpdateStatus(order.id, 'rejected')}>
+                                            CANCELAR
+                                        </button>
+                                    </div>
+                                )}
+                                {order.status === 'approved' && (
+                                    <div className="order-status-finished">
+                                        ✅ Pedido Concluído
+                                    </div>
+                                )}
+                                {order.status === 'rejected' && (
+                                    <div className="order-status-cancelled">
+                                        ❌ Pedido Cancelado
+                                    </div>
+                                )}
                             </div>
                         );
                     })}
