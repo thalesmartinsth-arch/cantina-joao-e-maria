@@ -1,17 +1,25 @@
 import React from 'react';
 import { useTheme } from '../context/ThemeContext';
 import { Sun, Moon, LogOut } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import './Header.css';
 
 const Header = () => {
     const { theme, toggleTheme } = useTheme();
     const navigate = useNavigate();
+    const location = useLocation();
 
     const handleLogout = async () => {
         await supabase.auth.signOut();
         navigate('/');
+    };
+
+    const getButtonStyle = (path) => {
+        const isActive = location.pathname === path;
+        return isActive
+            ? { background: 'var(--color-primary)', color: 'white', border: '1px solid var(--color-primary)' }
+            : { background: 'transparent', color: 'var(--color-text)', border: '1px solid var(--border-color)' };
     };
 
     return (
@@ -30,28 +38,28 @@ const Header = () => {
                 <nav style={{ display: 'flex', gap: '1rem', marginRight: 'auto', marginLeft: '2rem' }}>
                     <button
                         className="btn"
-                        style={{ background: 'transparent', color: 'var(--color-text)', border: '1px solid var(--border-color)' }}
+                        style={getButtonStyle('/dashboard')}
                         onClick={() => navigate('/dashboard')}
                     >
                         📦 Produtos
                     </button>
                     <button
                         className="btn"
-                        style={{ background: 'var(--color-primary)', color: 'white' }}
+                        style={getButtonStyle('/orders')}
                         onClick={() => navigate('/orders')}
                     >
                         📋 Pedidos
                     </button>
                     <button
                         className="btn"
-                        style={{ background: 'transparent', color: 'var(--color-text)', border: '1px solid var(--border-color)' }}
+                        style={getButtonStyle('/financial')}
                         onClick={() => navigate('/financial')}
                     >
                         💰 Financeiro
                     </button>
                     <button
                         className="btn"
-                        style={{ background: 'transparent', color: 'var(--color-text)', border: '1px solid var(--border-color)' }}
+                        style={getButtonStyle('/history')}
                         onClick={() => navigate('/history')}
                     >
                         📜 Histórico
