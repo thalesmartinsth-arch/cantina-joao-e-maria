@@ -125,7 +125,14 @@ const Orders = () => {
             return { label: '✅ Pagamento Realizado', className: 'pay-status-paid' };
         }
         if (order.payment_method === 'money') {
-            return { label: '⚠️ Pagamento Pendente', className: 'pay-status-pending' };
+            if (order.status === 'approved') {
+                return { label: '✅ Pago no Local', className: 'pay-status-paid' };
+            }
+            return { label: '⚠️ Receber na Entrega', className: 'pay-status-pending' };
+        }
+
+        if (order.status === 'approved') {
+            return { label: '✅ Pagamento Resolvido', className: 'pay-status-paid' };
         }
         return { label: '❓ Verificar Pagamento', className: 'pay-status-unknown' };
     };
