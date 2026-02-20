@@ -147,7 +147,11 @@ const History = () => {
                                 <tr style={{ background: '#f9fafb', fontWeight: 'bold' }}>
                                     <td colSpan="4" style={{ textAlign: 'right' }}>Total do Período:</td>
                                     <td colSpan="2">
-                                        {formatCurrency(orders.reduce((acc, curr) => acc + (parseFloat(curr.total_amount) || 0), 0))}
+                                        {formatCurrency(
+                                            orders
+                                                .filter(o => o.status === 'approved')
+                                                .reduce((acc, curr) => acc + (parseFloat(curr.total_amount) || 0), 0)
+                                        )}
                                     </td>
                                 </tr>
                             </tbody>
@@ -210,7 +214,13 @@ const History = () => {
                 <div className="print-footer">
                     <div className="print-total">
                         <span>Total Geral</span>
-                        <strong>{formatCurrency(orders.reduce((acc, curr) => acc + (parseFloat(curr.total_amount) || 0), 0))}</strong>
+                        <strong>
+                            {formatCurrency(
+                                orders
+                                    .filter(o => o.status === 'approved')
+                                    .reduce((acc, curr) => acc + (parseFloat(curr.total_amount) || 0), 0)
+                            )}
+                        </strong>
                     </div>
                 </div>
             </div>
