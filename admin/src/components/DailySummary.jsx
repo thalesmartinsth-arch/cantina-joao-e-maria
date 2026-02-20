@@ -10,13 +10,7 @@ const DailySummary = ({ date, orders }) => {
 
     // Calculate Metrics
     const totalRevenue = orders.reduce((acc, order) => {
-        // Only count approved items for revenue, or maybe all active?
-        // User asked for "Faturamento", usually implies actual money.
-        // Let's count 'paid' and 'approved'. 'pending' money is not yet revenue.
-        // Actually, to match the "Active Orders" view, let's sum everything
-        // but maybe differentiate?
-        // Reference image shows "Faturamento". Let's sum everything valid (paid/pending/approved).
-        if (order.status !== 'rejected' && order.status !== 'cancelled') {
+        if (order.status === 'approved') {
             return acc + (parseFloat(order.total_amount) || 0);
         }
         return acc;
