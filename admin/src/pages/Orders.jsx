@@ -13,6 +13,7 @@ const Orders = () => {
     // Date Management
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [activityMap, setActivityMap] = useState(new Set());
+    const [activeTab, setActiveTab] = useState('pending'); // 'pending', 'approved', 'rejected'
 
     const [modalConfig, setModalConfig] = useState({
         isOpen: false, title: '', message: '', confirmText: '', isDestructive: false, onConfirm: () => { }
@@ -39,7 +40,6 @@ const Orders = () => {
                 // Filter by DATE, not just status. We want to see EVERYTHING for that day.
                 .gte('created_at', start.toISOString())
                 .lte('created_at', end.toISOString())
-                .neq('status', 'cancelled') // Optionally hide cancelled to keep it clean? Let's keep rejected visible if needed.
                 .order('created_at', { ascending: false });
 
             if (error) {
@@ -130,6 +130,13 @@ const Orders = () => {
         return { label: '❓ Verificar Pagamento', className: 'pay-status-unknown' };
     };
 
+    const filteredOrders = orders.filter(order => {
+        if (activeTab === 'pending') return order.status === 'pending' || order.status === 'paid';
+        if (activeTab === 'approved') return order.status === 'approved';
+        if (activeTab === 'rejected') return order.status === 'rejected' || order.status === 'cancelled';
+        return true;
+    });
+
     return (
         <div className="orders-container">
             <Header />
@@ -153,9 +160,30 @@ const Orders = () => {
                     activityMap={activityMap}
                 />
 
+                <div className="orders-tabs">
+                    <button
+                        className={`tab-btn ${activeTab === 'pending' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('pending')}
+                    >
+                        ⚡ Pendentes ({orders.filter(o => o.status === 'pending' || o.status === 'paid').length})
+                    </button>
+                    <button
+                        className={`tab-btn ${activeTab === 'approved' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('approved')}
+                    >
+                        ✅ Concluídos ({orders.filter(o => o.status === 'approved').length})
+                    </button>
+                    <button
+                        className={`tab-btn ${activeTab === 'rejected' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('rejected')}
+                    >
+                        ❌ Cancelados ({orders.filter(o => o.status === 'rejected' || o.status === 'cancelled').length})
+                    </button>
+                </div>
+
                 <div className="orders-header">
                     <h2>
-                        {orders.length} {orders.length === 1 ? 'Pedido' : 'Pedidos'}
+                        {filteredOrders.length} {filteredOrders.length === 1 ? 'Pedido' : 'Pedidos'} na Aba
                     </h2>
                     <button className="refresh-btn" onClick={() => fetchOrders(selectedDate)}>
                         &#x21bb; Atualizar
@@ -164,14 +192,14 @@ const Orders = () => {
 
                 {loading && <p style={{ textAlign: 'center', padding: '20px' }}>Carregando...</p>}
 
-                {!loading && orders.length === 0 && (
+                {!loading && filteredOrders.length === 0 && (
                     <div className="empty-state">
-                        <p>Nenhum pedido encontrado para este dia.</p>
+                        <p>Nenhum pedido nesta aba para este dia.</p>
                     </div>
                 )}
 
                 <div className="orders-grid">
-                    {orders.map((order) => {
+                    {filteredOrders.map((order) => {
                         const payStatus = getPaymentStatus(order);
 
                         return (
@@ -209,7 +237,7 @@ const Orders = () => {
                                     <span className="total-value">{formatCurrency(order.total_amount)}</span>
                                 </div>
 
-                                {order.status !== 'approved' && order.status !== 'rejected' && (
+                                {order.status !== 'approved' && order.status !== 'rejected' && order.status !== 'cancelled' && (
                                     <div className="order-actions-row">
                                         <button className="action-btn btn-approve" onClick={() => handleUpdateStatus(order.id, 'approved')}>
                                             PRONTO
@@ -224,7 +252,7 @@ const Orders = () => {
                                         ✅ Pedido Concluído
                                     </div>
                                 )}
-                                {order.status === 'rejected' && (
+                                {(order.status === 'rejected' || order.status === 'cancelled') && (
                                     <div className="order-status-cancelled">
                                         ❌ Pedido Cancelado
                                     </div>

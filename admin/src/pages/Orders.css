@@ -11,6 +11,43 @@
     padding: 1rem;
 }
 
+.orders-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    background: #fdfcfb;
+    padding: 0.5rem;
+    border-radius: 12px;
+    border: 1px solid #e1dbd5;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 1rem;
+    border: none;
+    background: transparent;
+    color: #5d4037;
+    font-weight: 700;
+    font-size: 0.95rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.tab-btn:hover {
+    background: rgba(93, 64, 55, 0.05);
+}
+
+.tab-btn.active {
+    background: #5d4037;
+    color: white;
+    box-shadow: 0 4px 12px rgba(93, 64, 55, 0.2);
+}
+
 .orders-header {
     display: flex;
     justify-content: space-between;
