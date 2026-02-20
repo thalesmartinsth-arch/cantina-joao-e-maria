@@ -2,15 +2,15 @@
     background: linear-gradient(90deg, #d97706 0%, #b45309 100%);
     /* Simulating the reference image orange/brown */
     /* Let's use our brand orange */
-    background: linear-gradient(135deg, #5d4037 0%, #3e2723 100%);
-    /* Brown / Wood theme */
+    background: linear-gradient(135deg, #8b4513 0%, #5d2e0d 100%);
+    /* Matching theme primary brown */
     color: white;
     border-radius: 16px;
     padding: 1.5rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 10px 25px -5px rgba(62, 39, 35, 0.4);
+    box-shadow: 0 10px 25px -5px rgba(139, 69, 19, 0.4);
     margin-bottom: 2rem;
     position: relative;
     overflow: hidden;

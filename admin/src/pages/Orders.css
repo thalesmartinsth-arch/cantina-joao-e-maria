@@ -43,9 +43,9 @@
 }
 
 .tab-btn.active {
-    background: #5d4037;
+    background: #8b4513;
     color: white;
-    box-shadow: 0 4px 12px rgba(93, 64, 55, 0.2);
+    box-shadow: 0 4px 12px rgba(139, 69, 19, 0.2);
 }
 
 .orders-header {
