@@ -172,7 +172,7 @@ const Orders = () => {
                         className={`tab-btn ${activeTab === 'pending' ? 'active' : ''}`}
                         onClick={() => setActiveTab('pending')}
                     >
-                        ⚡ Pendentes ({orders.filter(o => o.status === 'pending' || o.status === 'paid').length})
+                        ⚡ Pedidos ({orders.filter(o => o.status === 'pending' || o.status === 'paid').length})
                     </button>
                     <button
                         className={`tab-btn ${activeTab === 'approved' ? 'active' : ''}`}
