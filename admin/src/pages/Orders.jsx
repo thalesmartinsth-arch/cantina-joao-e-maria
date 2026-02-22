@@ -247,7 +247,7 @@ const Orders = () => {
                                 {order.status !== 'approved' && order.status !== 'rejected' && order.status !== 'cancelled' && (
                                     <div className="order-actions-row">
                                         <button className="action-btn btn-approve" onClick={() => handleUpdateStatus(order.id, 'approved')}>
-                                            PRONTO
+                                            {order.payment_method === 'pix' ? 'ENTREGUE' : 'CONCLUIR (PAGO)'}
                                         </button>
                                         <button className="action-btn btn-reject" onClick={() => handleUpdateStatus(order.id, 'rejected')}>
                                             CANCELAR
