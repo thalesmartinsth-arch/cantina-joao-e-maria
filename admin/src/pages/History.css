@@ -66,6 +66,32 @@
     gap: 0.5rem;
 }
 
+@media (max-width: 600px) {
+    .history-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filters-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .date-filter {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .date-filter input {
+        width: 100%;
+    }
+
+    .btn-print {
+        justify-content: center;
+        width: 100%;
+    }
+}
+
 .history-table-container {
     background: white;
     border-radius: var(--radius-lg);

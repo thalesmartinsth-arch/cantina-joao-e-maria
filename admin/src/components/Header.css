@@ -82,7 +82,64 @@
     background: rgba(239, 68, 68, 0.1);
 }
 
-@media (max-width: 768px) {
+.header-nav {
+    display: flex;
+    gap: 1rem;
+    margin-right: auto;
+    margin-left: 2rem;
+}
+
+.nav-btn {
+    background: transparent;
+    color: var(--color-text);
+    border: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+}
+
+.nav-btn.active {
+    background: var(--color-primary);
+    color: white;
+    border: 1px solid var(--color-primary);
+}
+
+@media (max-width: 900px) {
+    .header-content {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+
+    .brand {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+    }
+
+    .header-nav {
+        margin: 0;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .header-nav::-webkit-scrollbar {
+        display: none;
+    }
+
+    .nav-btn {
+        flex: 0 0 auto;
+        white-space: nowrap;
+    }
+
+    .header-actions {
+        justify-content: center;
+        border-top: 1px solid var(--border-color);
+        padding-top: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
     .brand-text h1 {
         font-size: 1.2rem;
     }

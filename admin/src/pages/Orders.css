@@ -19,6 +19,7 @@
     padding: 0.5rem;
     border-radius: 12px;
     border: 1px solid #e1dbd5;
+    flex-wrap: wrap;
 }
 
 .tab-btn {

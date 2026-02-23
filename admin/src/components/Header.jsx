@@ -15,13 +15,6 @@ const Header = () => {
         navigate('/');
     };
 
-    const getButtonStyle = (path) => {
-        const isActive = location.pathname === path;
-        return isActive
-            ? { background: 'var(--color-primary)', color: 'white', border: '1px solid var(--color-primary)' }
-            : { background: 'transparent', color: 'var(--color-text)', border: '1px solid var(--border-color)' };
-    };
-
     return (
         <header className="header glass">
             <div className="container header-content">
@@ -35,31 +28,27 @@ const Header = () => {
                     </div>
                 </div>
 
-                <nav style={{ display: 'flex', gap: '1rem', marginRight: 'auto', marginLeft: '2rem' }}>
+                <nav className="header-nav">
                     <button
-                        className="btn"
-                        style={getButtonStyle('/dashboard')}
+                        className={`btn nav-btn ${location.pathname === '/dashboard' ? 'active' : ''}`}
                         onClick={() => navigate('/dashboard')}
                     >
                         📦 Produtos
                     </button>
                     <button
-                        className="btn"
-                        style={getButtonStyle('/orders')}
+                        className={`btn nav-btn ${location.pathname === '/orders' ? 'active' : ''}`}
                         onClick={() => navigate('/orders')}
                     >
                         📋 Pedidos
                     </button>
                     <button
-                        className="btn"
-                        style={getButtonStyle('/financial')}
+                        className={`btn nav-btn ${location.pathname === '/financial' ? 'active' : ''}`}
                         onClick={() => navigate('/financial')}
                     >
                         💰 Financeiro
                     </button>
                     <button
-                        className="btn"
-                        style={getButtonStyle('/history')}
+                        className={`btn nav-btn ${location.pathname === '/history' ? 'active' : ''}`}
                         onClick={() => navigate('/history')}
                     >
                         📜 Histórico
