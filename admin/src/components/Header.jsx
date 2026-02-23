@@ -1,12 +1,10 @@
 import React from 'react';
-import { useTheme } from '../context/ThemeContext';
-import { Sun, Moon, LogOut } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import './Header.css';
 
 const Header = () => {
-    const { theme, toggleTheme } = useTheme();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -29,16 +27,10 @@ const Header = () => {
                         </div>
                     </div>
 
-                    <div className="header-actions">
-                        <button className="theme-toggle" onClick={toggleTheme} aria-label="Alterar tema">
-                            {theme === 'default' ? <Sun size={24} /> : <Moon size={24} />}
-                        </button>
-
-                        <button className="btn btn-logout" onClick={handleLogout}>
-                            <LogOut size={20} />
-                            <span>Sair</span>
-                        </button>
-                    </div>
+                    <button className="btn btn-logout" onClick={handleLogout}>
+                        <LogOut size={20} />
+                        <span>Sair</span>
+                    </button>
                 </div>
 
                 <nav className="header-nav">
